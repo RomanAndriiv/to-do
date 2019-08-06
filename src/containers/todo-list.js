@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { deleteTask } from "../actions";
+import { deleteTask, toggleTask } from "../actions";
 import { TodosContext } from "../index"
 
 export const TodoList = () => {
@@ -9,8 +9,12 @@ export const TodoList = () => {
     else return (
         <ul className="theList">
             {todosContext.todosState.todos.map(item => {
-                return <li onClick={() => todosContext.todosDispatch(deleteTask(item.id))}
-                    key={item.id}>{item.text}</li>
+                return <li
+                            className={`${item.lineThrough ? 'lineThrough' : ''}`}
+                            onClick={() => todosContext.todosDispatch(toggleTask(item.id))}
+                            key={item.id}>{item.text}
+                            <span onClick={() => todosContext.todosDispatch(deleteTask(item.id))}>X</span>
+                        </li>
             })}
         </ul>);
 }

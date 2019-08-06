@@ -20,7 +20,8 @@
     background-color: #003399;
 }
 
-.todoListMain .theList li {
+.todoListMain .theList li,
+.todoListMain .theList span {
     color: #333333;
     background-color: rgba(255, 255, 255, .5);
     padding: 15px;
@@ -38,4 +39,18 @@
 
 ul.theList {
     padding: 0;
+    position: relative;
+}
+ul li {
+    position: relative;
+}
+
+ul li.lineThrough {
+    text-decoration: line-through;
+}
+
+ul span {
+    position: absolute;
+    right: -50px;
+    top: 0;
 }
