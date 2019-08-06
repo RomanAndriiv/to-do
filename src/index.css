@@ -1,0 +1,10 @@
+body {
+    padding: 50px;
+    background-color: #1646cc;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+#container {
+    display: flex;
+    justify-content: flex;
+}
