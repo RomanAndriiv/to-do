@@ -1,4 +1,4 @@
-import { ADD_TASK_ASYNC } from "../actions";
+import { ADD_TASK } from "../actions";
 import { DELETE_TASK } from "../actions";
 
 const initialState = {
@@ -7,7 +7,7 @@ const initialState = {
 
 const todos = (state = initialState, action) => {
     switch (action.type) {
-        case ADD_TASK_ASYNC:
+        case ADD_TASK:
             return {
                 ...state,
                 tasks: [...state.tasks, {
