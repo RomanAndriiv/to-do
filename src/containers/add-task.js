@@ -9,7 +9,7 @@ export const AddTask = () => {
     const addTodo = (e) => {
         e.preventDefault();
 
-        if (inputEl.current.trim !== "") {
+        if(inputEl.current.value.trim() !== "") {
             todosContext.todosDispatch(addTask(inputEl.current.value));
             inputEl.current.value = "";
         }
