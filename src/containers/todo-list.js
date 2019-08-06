@@ -1,41 +1,16 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import { connect } from "react-redux";
+import React, { useContext } from "react";
 import { deleteTask } from "../actions";
+import { TodosContext } from "../index"
 
+export const TodoList = () => {
+    const todosContext = useContext(TodosContext);
 
-class TodoList extends Component {
-    deleteTask = (item) => {
-        return <li onClick={() => this.props.deleteTask(item.id)}
+    if (todosContext.todosState.todos.length === 0)  return <div>Trere are no tasks</div>;
+    else return (
+        <ul className="theList">
+            {todosContext.todosState.todos.map(item => {
+                return <li onClick={() => todosContext.todosDispatch(deleteTask(item.id))}
                     key={item.id}>{item.text}</li>
-    }
-
-    render() {
-        if (this.props.tasks.length === 0) {
-            return <div>Trere are no tasks</div>;
-        }
-
-        return (
-            <ul className="theList">
-                {this.props.tasks.map(this.deleteTask)}
-            </ul>
-        );
-    }
+            })}
+        </ul>);
 }
-TodoList.propTypes = {
-    tasks: PropTypes.array.isRequired,
-}
-
-function mapStateToProps(state) {
-    return {
-        tasks: state.todos.tasks,
-    }
-}
-const mapDispatchToProps = (dispatch) => {
-    return {
-        deleteTask: (id) => dispatch(deleteTask(id))
-    }
-}
-
-const TodoListConnnected = connect(mapStateToProps, mapDispatchToProps)(TodoList);
-export default TodoListConnnected;

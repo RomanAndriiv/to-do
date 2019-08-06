@@ -1,16 +1,16 @@
 import { ADD_TASK } from "../actions";
 import { DELETE_TASK } from "../actions";
 
-const initialState = {
-    tasks: [],
+export const initialState = {
+    todos: [],
 };
 
-const todos = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
     switch (action.type) {
         case ADD_TASK:
             return {
                 ...state,
-                tasks: [...state.tasks, {
+                todos: [...state.todos, {
                     id: action.id,
                     text: action.text,
                 }],
@@ -18,11 +18,9 @@ const todos = (state = initialState, action) => {
         case DELETE_TASK:
             return {
                 ...state,
-                tasks: state.tasks.filter(t => t.id !== action.id),
+                todos: state.todos.filter(t => t.id !== action.id),
             }
         default:
             return state;
     }
 };
-
-export default todos;

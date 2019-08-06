@@ -1,41 +1,28 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useContext, useRef } from "react";
 import { addTask } from "../actions";
+import { TodosContext } from "../index"
 
-class AddTask extends Component {
-    constructor(props){
-        super(props);
+export const AddTask = () => {
+    const inputEl = useRef(null);
+    const todosContext = useContext(TodosContext);
 
-        this.addItem = this.addItem.bind(this);
-    }
-
-    addItem(e){
+    const addTodo = (e) => {
         e.preventDefault();
 
-        if (this._inputElement.trim !== "") {
-            this.props.addTask(this._inputElement.value);
-            this._inputElement.value = "";
+        if (inputEl.current.trim !== "") {
+            todosContext.todosDispatch(addTask(inputEl.current.value));
+            inputEl.current.value = "";
         }
     }
 
-    render() {
-        return (   
-            <div className="header">
-                <form onSubmit={this.addItem}>
-                    <input ref={(a) => this._inputElement = a}
-                            placeholder="enter task">
-                    </input>
-                    <button type="submit">add</button>
-                </form>
-            </div>
-        );
-    }
+    return (   
+        <div className="header">
+            <form onSubmit={addTodo}>
+                <input ref={inputEl}
+                        placeholder="enter task">
+                </input>
+                <button type="submit">add</button>
+            </form>
+        </div>
+    );
 }
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        addTask: (text) => dispatch(addTask(text))
-    }
-}
-
-export default connect(undefined, mapDispatchToProps)(AddTask);

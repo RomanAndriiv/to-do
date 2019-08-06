@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useReducer } from "react";
 import ReactDOM from "react-dom";
-import { Provider } from 'react-redux';
-import "./index.css";
+import { initialState, reducer } from "./reducers/todos";
 import Todo from "./components/todo";
-import store from "./store";
+import "./index.css";
 
-const App = () => (
-    <div>
-        <Provider store={store}>
+export const TodosContext = React.createContext();
+
+const App = () => {
+    const [todos, dispatch] = useReducer(reducer, initialState)
+    return(
+        <TodosContext.Provider
+            value = { { todosState: todos, todosDispatch: dispatch }}
+        >
             <Todo />
-        </Provider>
-    </div>
-);
+        </TodosContext.Provider>
+    )
+};
 
 ReactDOM.render( <App />, document.querySelector("#container"));

@@ -1,12 +1,14 @@
 import React from "react";
-import TodoListConnnected from "../containers/todo-list";
-import AddTask from "../containers/add-task";
+import { AddTask } from "../containers/add-task";
+import { TodoList } from "../containers/todo-list";
 import "./todo.css";
+
+export const TodosContext = React.createContext();
 
 const Todo = () => (
     <div className="todoListMain">
         <AddTask />
-        <TodoListConnnected />
+        <TodoList />
     </div>
 );
 
