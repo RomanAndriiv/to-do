@@ -1,5 +1,5 @@
 import React, { useReducer } from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from 'react-dom/client';
 import { initialState, reducer } from "./reducers/todos";
 import Todo from "./components/todo";
 import "./index.css";
@@ -17,4 +17,6 @@ const App = () => {
     )
 };
 
-ReactDOM.render( <App />, document.querySelector("#container"));
+const container = document.getElementById('container');
+const root = createRoot(container);
+root.render(<App tab="home" />);
