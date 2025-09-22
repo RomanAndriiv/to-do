@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { deleteTask, toggleTask } from "../actions";
 import { TodosContext } from "../index";
-import Expanation from "../components/Expanation";
+import Explanation from "../components/Explanation";
 import NoTasks from "../components/NoTasks";
-import NoTasks2 from "../components/NoTasks2";
 
 export const TodoList = () => {
   const todosContext = useContext(TodosContext);
@@ -12,8 +11,7 @@ export const TodoList = () => {
     return (
       <>
         <NoTasks entity={"items"} />
-        <NoTasks2 />
-        <Expanation />
+        <Explanation />
       </>
     );
   else
