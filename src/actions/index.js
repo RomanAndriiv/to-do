@@ -37,6 +37,22 @@ export function moveColumn(fromIndex, toIndex) {
     type: MOVE_COLUMN,
   };
 }
+export const ADD_COLUMN = "ADD_COLUMN";
+export const DELETE_COLUMN = "DELETE_COLUMN";
+
+export function addColumn(name) {
+  return {
+    name,
+    type: ADD_COLUMN,
+  };
+}
+
+export function deleteColumn(index) {
+  return {
+    index,
+    type: DELETE_COLUMN,
+  };
+}
 export function deleteTask(id) {
   return {
     id,

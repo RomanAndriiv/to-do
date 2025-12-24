@@ -22,9 +22,14 @@ export const AddTask = () => {
       <form onSubmit={addTodo}>
         <input ref={inputEl} placeholder="enter task"></input>
         <select ref={selectEl} defaultValue="To Do">
-          <option>To Do</option>
-          <option>In Progress</option>
-          <option>Done</option>
+          {(todosContext &&
+          todosContext.todosState &&
+          todosContext.todosState.columnsOrder
+            ? todosContext.todosState.columnsOrder
+            : ["To Do", "In Progress", "Done"]
+          ).map((c) => (
+            <option key={c}>{c}</option>
+          ))}
         </select>
         <button type="submit">add</button>
       </form>

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { deleteTask, toggleTask, moveTask, moveTaskTo } from "../actions";
 import { TodosContext } from "../index";
-import Explanation from "../components/Explanation";
 import NoTasks from "../components/NoTasks";
 
 export const TodoList = ({ column = "To Do" }) => {
@@ -14,13 +13,7 @@ export const TodoList = ({ column = "To Do" }) => {
   const allTodos = todosContext.todosState.todos || [];
   const items = allTodos.filter((t) => (t.column || "To Do") === column);
 
-  if (allTodos.length === 0)
-    return (
-      <>
-        <NoTasks entity={"items"} />
-        <Explanation />
-      </>
-    );
+  if (allTodos.length === 0) return <NoTasks entity={"items"} />;
 
   // always render the list as a drop target so tasks can be dropped into empty columns
   return (
@@ -31,14 +24,16 @@ export const TodoList = ({ column = "To Do" }) => {
       }}
       onDrop={(e) => {
         e.preventDefault();
-        const data = e.dataTransfer.getData("text/plain");
+        const data =
+          e.dataTransfer.getData("text/task") ||
+          e.dataTransfer.getData("text/plain");
         if (!data) return;
         try {
           const parsed = JSON.parse(data);
           const toIndex = dragOverIndex !== null ? dragOverIndex : items.length;
           todosContext.todosDispatch(moveTaskTo(parsed.id, column, toIndex));
         } catch (err) {
-          // ignore
+          // ignore non-task payloads
         }
         setDragOverIndex(null);
       }}
@@ -52,13 +47,15 @@ export const TodoList = ({ column = "To Do" }) => {
           }}
           onDrop={(e) => {
             e.preventDefault();
-            const data = e.dataTransfer.getData("text/plain");
+            const data =
+              e.dataTransfer.getData("text/task") ||
+              e.dataTransfer.getData("text/plain");
             if (!data) return;
             try {
               const parsed = JSON.parse(data);
               todosContext.todosDispatch(moveTaskTo(parsed.id, column, 0));
             } catch (err) {
-              // ignore
+              // ignore non-task payloads
             }
             setDragOverIndex(null);
           }}
@@ -75,7 +72,7 @@ export const TodoList = ({ column = "To Do" }) => {
               draggable
               onDragStart={(e) => {
                 e.dataTransfer.setData(
-                  "text/plain",
+                  "text/task",
                   JSON.stringify({
                     id: item.id,
                     fromColumn: column,

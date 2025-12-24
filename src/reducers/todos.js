@@ -4,6 +4,7 @@ import { TOGGLE_TASK } from "../actions";
 import { MOVE_TASK } from "../actions";
 import { MOVE_TASK_TO } from "../actions";
 import { MOVE_COLUMN } from "../actions";
+import { ADD_COLUMN, DELETE_COLUMN } from "../actions";
 
 export const initialState = {
   todos: [],
@@ -102,6 +103,40 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         columnsOrder: next,
+      };
+    }
+    case ADD_COLUMN: {
+      const { name } = action;
+      if (!name || typeof name !== "string") return state;
+      const current = state.columnsOrder || ["To Do", "In Progress", "Done"];
+      // avoid duplicates
+      if (current.includes(name)) return state;
+      return {
+        ...state,
+        columnsOrder: [...current, name],
+      };
+    }
+    case DELETE_COLUMN: {
+      const { index } = action;
+      const current = state.columnsOrder || ["To Do", "In Progress", "Done"];
+      if (index == null || index < 0 || index >= current.length) return state;
+      const removed = current[index];
+      // choose target column for tasks: prefer left, else right, else first
+      const target = current[index - 1] ?? current[index + 1] ?? current[0];
+      const newColumns = [
+        ...current.slice(0, index),
+        ...current.slice(index + 1),
+      ];
+      const newTodos = state.todos.map((t) => {
+        if ((t.column || "To Do") === removed) {
+          return { ...t, column: target };
+        }
+        return t;
+      });
+      return {
+        ...state,
+        columnsOrder: newColumns,
+        todos: newTodos,
       };
     }
     default:
