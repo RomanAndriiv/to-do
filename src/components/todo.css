@@ -1,7 +1,5 @@
 .todoListMain .header input {
   padding: 10px;
-  font-size: 16px;
-  border: 2px solid #ffffff;
   width: 165px;
 }
 
@@ -22,6 +20,7 @@
   background-color: #ffffff;
   color: #333333;
   appearance: none;
+  margin-left: 8px;
 }
 .primaryAction {
   padding: 10px 12px;
@@ -133,6 +132,7 @@ ul li.lineThrough {
   padding: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
+  overflow: hidden;
 }
 /* Manipulation bar: row above columns with batch action controls */
 .manipulationBar {
@@ -195,15 +195,11 @@ ul li.lineThrough {
   padding: 6px;
 }
 .searchControl {
-  margin: 8px 0;
+  margin-bottom: 8px;
 }
 .searchControl input {
   padding: 6px;
   width: 240px;
-}
-.statusFilter {
-  margin-left: 8px;
-  padding: 6px;
 }
 .deleteColumn {
   margin-left: 8px;

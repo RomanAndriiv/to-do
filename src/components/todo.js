@@ -37,7 +37,7 @@ const Todo = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <select
-          className="statusFilter"
+          className="primarySelect"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >

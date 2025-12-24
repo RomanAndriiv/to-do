@@ -20,8 +20,8 @@ export const AddTask = () => {
   return (
     <div className="header">
       <form onSubmit={addTodo}>
-        <input ref={inputEl} placeholder="enter task"></input>
-        <select ref={selectEl} defaultValue="To Do">
+        <input ref={inputEl} placeholder="Enter task"></input>
+        <select className="primarySelect" ref={selectEl} defaultValue="To Do">
           {(todosContext &&
           todosContext.todosState &&
           todosContext.todosState.columnsOrder
@@ -31,7 +31,7 @@ export const AddTask = () => {
             <option key={c}>{c}</option>
           ))}
         </select>
-        <button type="submit">add</button>
+        <button type="submit">Add task</button>
       </form>
     </div>
   );
