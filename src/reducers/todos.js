@@ -3,9 +3,11 @@ import { DELETE_TASK } from "../actions";
 import { TOGGLE_TASK } from "../actions";
 import { MOVE_TASK } from "../actions";
 import { MOVE_TASK_TO } from "../actions";
+import { MOVE_COLUMN } from "../actions";
 
 export const initialState = {
   todos: [],
+  columnsOrder: ["To Do", "In Progress", "Done"],
 };
 
 export const reducer = (state = initialState, action) => {
@@ -50,7 +52,11 @@ export const reducer = (state = initialState, action) => {
       };
     case MOVE_TASK_TO: {
       const { id, column: toColumn, toIndex } = action;
-      const columnsOrder = ["To Do", "In Progress", "Done"];
+      const columnsOrder = state.columnsOrder || [
+        "To Do",
+        "In Progress",
+        "Done",
+      ];
 
       // find the task to move
       const task = state.todos.find((t) => t.id === id);
@@ -83,6 +89,19 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         todos: newTodos,
+      };
+    }
+    case MOVE_COLUMN: {
+      const { fromIndex, toIndex } = action;
+      const current = state.columnsOrder || ["To Do", "In Progress", "Done"];
+      if (fromIndex == null || toIndex == null) return state;
+      if (fromIndex === toIndex) return state;
+      const next = [...current];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return {
+        ...state,
+        columnsOrder: next,
       };
     }
     default:

@@ -3,6 +3,7 @@ export const DELETE_TASK = "DELETE_TASK";
 export const TOGGLE_TASK = "TOGGLE_TASK";
 export const MOVE_TASK = "MOVE_TASK";
 export const MOVE_TASK_TO = "MOVE_TASK_TO";
+export const MOVE_COLUMN = "MOVE_COLUMN";
 
 let nextId = 0;
 export const addTask = (text, column = "To Do") => {
@@ -27,6 +28,13 @@ export function moveTaskTo(id, column, toIndex) {
     column,
     toIndex,
     type: MOVE_TASK_TO,
+  };
+}
+export function moveColumn(fromIndex, toIndex) {
+  return {
+    fromIndex,
+    toIndex,
+    type: MOVE_COLUMN,
   };
 }
 export function deleteTask(id) {

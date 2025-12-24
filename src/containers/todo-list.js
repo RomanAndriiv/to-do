@@ -4,10 +4,11 @@ import { TodosContext } from "../index";
 import Explanation from "../components/Explanation";
 import NoTasks from "../components/NoTasks";
 
-const columnsOrder = ["To Do", "In Progress", "Done"];
-
 export const TodoList = ({ column = "To Do" }) => {
   const todosContext = useContext(TodosContext);
+  const columnsOrder = (todosContext &&
+    todosContext.todosState &&
+    todosContext.todosState.columnsOrder) || ["To Do", "In Progress", "Done"];
   const [dragOverIndex, setDragOverIndex] = useState(null);
 
   const allTodos = todosContext.todosState.todos || [];
