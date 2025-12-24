@@ -2,7 +2,14 @@ import React, { useContext, useState } from "react";
 import { AddTask } from "../containers/add-task";
 import { TodoList } from "../containers/todo-list";
 import { TodosContext } from "../index";
-import { moveColumn, addColumn, deleteColumn } from "../actions";
+import {
+  moveColumn,
+  addColumn,
+  deleteColumn,
+  deleteTasks,
+  setTasksComplete,
+  moveTasksTo,
+} from "../actions";
 import "./todo.css";
 
 const Todo = () => {
@@ -12,6 +19,11 @@ const Todo = () => {
     todosContext.todosState.columnsOrder) || ["To Do", "In Progress", "Done"];
   const [dragOverIdx, setDragOverIdx] = useState(null);
   const [newColName, setNewColName] = useState("");
+  const { selectedIds = [], setSelectedIds } = todosContext || {};
+  const anySelected = selectedIds && selectedIds.length > 0;
+  const [moveTarget, setMoveTarget] = useState(
+    columns && columns.length ? columns[0] : "To Do"
+  );
 
   return (
     <div className="todoListMain columnsContainer">
@@ -32,6 +44,70 @@ const Todo = () => {
         >
           Add Column
         </button>
+        {anySelected && (
+          <div className="selectionControls">
+            <button
+              onClick={() => {
+                if (!window.confirm(`Delete ${selectedIds.length} selected?`))
+                  return;
+                todosContext.todosDispatch(deleteTasks(selectedIds));
+                setSelectedIds([]);
+              }}
+            >
+              Delete Selected
+            </button>
+            <button
+              onClick={() => {
+                todosContext.todosDispatch(setTasksComplete(selectedIds, true));
+                setSelectedIds([]);
+              }}
+            >
+              Mark Complete
+            </button>
+            <button
+              onClick={() => {
+                todosContext.todosDispatch(
+                  setTasksComplete(selectedIds, false)
+                );
+                setSelectedIds([]);
+              }}
+            >
+              Mark Incomplete
+            </button>
+            <select
+              value={moveTarget}
+              onChange={(e) => setMoveTarget(e.target.value)}
+            >
+              {columns.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            <button
+              onClick={() => {
+                todosContext.todosDispatch(
+                  moveTasksTo(selectedIds, moveTarget)
+                );
+                setSelectedIds([]);
+              }}
+            >
+              Move Selected
+            </button>
+            <button
+              onClick={() => {
+                // toggle select all: if all selected, clear; else select all ids
+                const allIds = todosContext.todosState.todos.map((t) => t.id);
+                const allSelected = allIds.every((id) =>
+                  selectedIds.includes(id)
+                );
+                setSelectedIds(allSelected ? [] : allIds);
+              }}
+            >
+              Toggle Select All
+            </button>
+          </div>
+        )}
       </div>
       <div className="columns" onDragOver={(e) => e.preventDefault()}>
         {columns.map((col, idx) => (

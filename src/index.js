@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from "react";
+import React, { useReducer, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { initialState, reducer } from "./reducers/todos";
 import Todo from "./components/todo";
@@ -17,6 +17,7 @@ const App = () => {
   };
 
   const [todos, dispatch] = useReducer(reducer, initialState, initializer);
+  const [selectedIds, setSelectedIds] = useState([]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -27,7 +28,12 @@ const App = () => {
 
   return (
     <TodosContext.Provider
-      value={{ todosState: todos, todosDispatch: dispatch }}
+      value={{
+        todosState: todos,
+        todosDispatch: dispatch,
+        selectedIds,
+        setSelectedIds,
+      }}
     >
       <Todo />
     </TodosContext.Provider>

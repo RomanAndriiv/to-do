@@ -126,6 +126,26 @@ ul span {
   align-items: center;
   justify-content: space-between;
 }
+.itemToggle {
+  margin-right: 8px;
+}
+.itemToggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+.itemSelect {
+  margin-right: 8px;
+}
+.itemSelect input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+.selectionControls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 12px;
+}
 .itemText {
   flex: 1;
 }

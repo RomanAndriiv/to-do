@@ -5,6 +5,7 @@ import { MOVE_TASK } from "../actions";
 import { MOVE_TASK_TO } from "../actions";
 import { MOVE_COLUMN } from "../actions";
 import { ADD_COLUMN, DELETE_COLUMN } from "../actions";
+import { DELETE_TASKS, SET_TASKS_COMPLETE, MOVE_TASKS_TO } from "../actions";
 
 export const initialState = {
   todos: [],
@@ -103,6 +104,61 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         columnsOrder: next,
+      };
+    }
+    case DELETE_TASKS: {
+      const { ids } = action;
+      if (!Array.isArray(ids) || ids.length === 0) return state;
+      return {
+        ...state,
+        todos: state.todos.filter((t) => !ids.includes(t.id)),
+      };
+    }
+    case SET_TASKS_COMPLETE: {
+      const { ids, completed } = action;
+      if (!Array.isArray(ids) || ids.length === 0) return state;
+      return {
+        ...state,
+        todos: state.todos.map((t) =>
+          ids.includes(t.id) ? { ...t, lineThrough: !!completed } : t
+        ),
+      };
+    }
+    case MOVE_TASKS_TO: {
+      const { ids, column: toColumn } = action;
+      if (!Array.isArray(ids) || ids.length === 0) return state;
+      const columnsOrder = state.columnsOrder || [
+        "To Do",
+        "In Progress",
+        "Done",
+      ];
+
+      // remove tasks to move from list preserving relative order of remaining
+      const moving = state.todos.filter((t) => ids.includes(t.id));
+      const remaining = state.todos.filter((t) => !ids.includes(t.id));
+
+      // count tasks before the target column
+      const beforeCount = columnsOrder.reduce((acc, col) => {
+        if (col === toColumn) return acc;
+        return (
+          acc + remaining.filter((t) => (t.column || "To Do") === col).length
+        );
+      }, 0);
+
+      // append moved tasks with updated column
+      const movedTasks = moving.map((t) => ({ ...t, column: toColumn }));
+
+      const insertAt = Math.max(0, Math.min(remaining.length, beforeCount));
+
+      const newTodos = [
+        ...remaining.slice(0, insertAt),
+        ...movedTasks,
+        ...remaining.slice(insertAt),
+      ];
+
+      return {
+        ...state,
+        todos: newTodos,
       };
     }
     case ADD_COLUMN: {

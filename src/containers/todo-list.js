@@ -12,6 +12,7 @@ export const TodoList = ({ column = "To Do" }) => {
 
   const allTodos = todosContext.todosState.todos || [];
   const items = allTodos.filter((t) => (t.column || "To Do") === column);
+  const { selectedIds = [], setSelectedIds } = todosContext || {};
 
   if (allTodos.length === 0) return <NoTasks entity={"items"} />;
 
@@ -88,10 +89,32 @@ export const TodoList = ({ column = "To Do" }) => {
               onDragLeave={() => setDragOverIndex(null)}
               onDragEnd={() => setDragOverIndex(null)}
               className={`${item.lineThrough ? "lineThrough" : ""}`}
-              onClick={() => todosContext.todosDispatch(toggleTask(item.id))}
               key={item.id}
             >
               <div className="itemRow">
+                <div className="itemSelect">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(item.id)}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      const next = selectedIds.includes(item.id)
+                        ? selectedIds.filter((id) => id !== item.id)
+                        : [...selectedIds, item.id];
+                      setSelectedIds(next);
+                    }}
+                  />
+                </div>
+                <div className="itemToggle">
+                  <input
+                    type="checkbox"
+                    checked={!!item.lineThrough}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      todosContext.todosDispatch(toggleTask(item.id));
+                    }}
+                  />
+                </div>
                 <div className="itemText">{item.text}</div>
                 <div className="itemControls">
                   {canMoveLeft && (

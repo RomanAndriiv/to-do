@@ -4,6 +4,9 @@ export const TOGGLE_TASK = "TOGGLE_TASK";
 export const MOVE_TASK = "MOVE_TASK";
 export const MOVE_TASK_TO = "MOVE_TASK_TO";
 export const MOVE_COLUMN = "MOVE_COLUMN";
+export const DELETE_TASKS = "DELETE_TASKS";
+export const SET_TASKS_COMPLETE = "SET_TASKS_COMPLETE";
+export const MOVE_TASKS_TO = "MOVE_TASKS_TO";
 
 let nextId = 0;
 if (typeof window !== "undefined" && window.localStorage) {
@@ -69,6 +72,28 @@ export function deleteTask(id) {
   return {
     id,
     type: DELETE_TASK,
+  };
+}
+export function deleteTasks(ids) {
+  return {
+    ids,
+    type: DELETE_TASKS,
+  };
+}
+
+export function setTasksComplete(ids, completed = true) {
+  return {
+    ids,
+    completed,
+    type: SET_TASKS_COMPLETE,
+  };
+}
+
+export function moveTasksTo(ids, column) {
+  return {
+    ids,
+    column,
+    type: MOVE_TASKS_TO,
   };
 }
 export function toggleTask(id) {
