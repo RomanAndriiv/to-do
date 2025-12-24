@@ -57,6 +57,14 @@ ul li.lineThrough {
   text-decoration: line-through;
 }
 
+/* Completed task styling: muted, slightly translucent, and italic */
+.todoListMain .theList li.lineThrough {
+  color: #666666;
+  background-color: rgba(220, 220, 220, 0.5);
+  opacity: 0.85;
+  font-style: italic;
+}
+
 ul span {
   position: absolute;
   right: -50px;
@@ -103,6 +111,13 @@ ul span {
 .columnsControls input {
   padding: 6px;
 }
+.searchControl {
+  margin: 8px 0;
+}
+.searchControl input {
+  padding: 6px;
+  width: 240px;
+}
 .deleteColumn {
   margin-left: 8px;
   background: transparent;
@@ -145,6 +160,28 @@ ul span {
   gap: 8px;
   align-items: center;
   margin-left: 12px;
+}
+.itemToggle input[type="checkbox"] {
+  /* completion checkbox: green accent, slightly smaller */
+  width: 16px;
+  height: 16px;
+  accent-color: #28a745;
+}
+.itemSelect input[type="checkbox"] {
+  /* selection checkbox: blue accent, slightly larger */
+  width: 20px;
+  height: 20px;
+  accent-color: #0066ff;
+}
+.selectAllControl {
+  list-style: none;
+  padding: 8px 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.selectAllControl label {
+  cursor: pointer;
+  user-select: none;
 }
 .itemText {
   flex: 1;

@@ -19,6 +19,7 @@ const Todo = () => {
     todosContext.todosState.columnsOrder) || ["To Do", "In Progress", "Done"];
   const [dragOverIdx, setDragOverIdx] = useState(null);
   const [newColName, setNewColName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const { selectedIds = [], setSelectedIds } = todosContext || {};
   const anySelected = selectedIds && selectedIds.length > 0;
   const [moveTarget, setMoveTarget] = useState(
@@ -28,6 +29,13 @@ const Todo = () => {
   return (
     <div className="todoListMain columnsContainer">
       <AddTask />
+      <div className="searchControl">
+        <input
+          placeholder="Search tasks"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <div className="columnsControls">
         <input
           value={newColName}
@@ -161,7 +169,7 @@ const Todo = () => {
                 ×
               </button>
             </h2>
-            <TodoList column={col} />
+            <TodoList column={col} search={searchTerm} />
           </div>
         ))}
       </div>
