@@ -1,10 +1,24 @@
 body {
-    padding: 50px;
-    background-color: #1646cc;
-    font-family: Georgia, 'Times New Roman', Times, serif;
+  padding: 32px;
+  background-color: #1646cc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
 #container {
-    display: flex;
-    justify-content: flex;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+}
+
+@media (max-width: 800px) {
+  body {
+    padding: 12px;
+  }
+  #container {
+    padding: 8px;
+  }
 }
