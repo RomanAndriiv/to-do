@@ -5,6 +5,34 @@
   width: 165px;
 }
 
+/* Primary controls: shared style for add (enter), search, and add-column */
+.primaryInput {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #cccccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #333333;
+}
+.primarySelect {
+  padding: 8px 10px;
+  font-size: 16px;
+  border: 2px solid #cccccc;
+  border-radius: 4px;
+  background-color: #ffffff;
+  color: #333333;
+  appearance: none;
+}
+.primaryAction {
+  padding: 10px 12px;
+  font-size: 16px;
+  border: 2px solid #0066ff;
+  color: #ffffff;
+  background-color: #0066ff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 .todoListMain .header button,
 button {
   padding: 10px;
@@ -84,6 +112,25 @@ ul li.lineThrough {
   display: flex;
   gap: 20px;
   margin-top: 20px;
+}
+/* Manipulation bar: row above columns with batch action controls */
+.manipulationBar {
+  display: flex;
+  padding: 8px 0;
+  margin-top: 12px;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  gap: 12px;
+  align-items: center;
+}
+.manipulationBar .selectionControls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.manipulationBar .selectionControls button:disabled,
+.manipulationBar .selectionControls select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .columns {
   display: flex;

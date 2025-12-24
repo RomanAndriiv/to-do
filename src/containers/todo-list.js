@@ -22,12 +22,67 @@ export const TodoList = ({
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
 
+  const subsequenceIndices = (q, text) => {
+    if (!q) return null;
+    const indices = [];
+    let j = 0;
+    for (let i = 0; i < text.length && j < q.length; i++) {
+      if (text[i] === q[j]) {
+        indices.push(i);
+        j++;
+      }
+    }
+    return indices.length === q.length ? indices : null;
+  };
+
+  const levenshtein = (a, b) => {
+    const m = a.length;
+    const n = b.length;
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0));
+    for (let i = 0; i <= m; i++) dp[i][0] = i;
+    for (let j = 0; j <= n; j++) dp[0][j] = j;
+    for (let i = 1; i <= m; i++) {
+      for (let j = 1; j <= n; j++) {
+        if (a[i - 1] === b[j - 1]) dp[i][j] = dp[i - 1][j - 1];
+        else
+          dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+      }
+    }
+    return dp[m][n];
+  };
+
+  const findMatchInfo = (text = "", rawQ = "") => {
+    const q = (rawQ || "").trim().toLowerCase();
+    if (!q) return null;
+    const lower = text.toLowerCase();
+    // direct substring
+    const idx = lower.indexOf(q);
+    if (idx !== -1) return { type: "substring", index: idx, length: q.length };
+    // subsequence (characters in order)
+    const seq = subsequenceIndices(q, lower);
+    if (seq) return { type: "chars", indices: seq };
+    // Levenshtein: try matching against substrings of similar length
+    const allowed = Math.max(1, Math.floor(q.length * 0.34));
+    let best = { dist: Infinity, index: -1, len: 0 };
+    for (let len = Math.max(1, q.length - 1); len <= q.length + 1; len++) {
+      if (len > lower.length) continue;
+      for (let i = 0; i <= lower.length - len; i++) {
+        const sub = lower.substring(i, i + len);
+        const d = levenshtein(q, sub);
+        if (d < best.dist) best = { dist: d, index: i, len };
+      }
+    }
+    if (best.dist <= allowed)
+      return { type: "substring", index: best.index, length: best.len };
+    return null;
+  };
+
   const allTodos = todosContext.todosState.todos || [];
   const items = allTodos
     .filter((t) => (t.column || "To Do") === column)
     .filter((t) => {
       if (!search || !search.trim()) return true;
-      return (t.text || "").toLowerCase().includes(search.toLowerCase());
+      return !!findMatchInfo(t.text, search);
     })
     .filter((t) => {
       if (!statusFilter || statusFilter === "all") return true;
@@ -117,10 +172,9 @@ export const TodoList = ({
             </label>
           </li>
           {items.map((item, index) => {
-            const q = (search || "").trim().toLowerCase();
+            const q = (search || "").trim();
             const text = item.text || "";
-            const lower = text.toLowerCase();
-            const matchIndex = q ? lower.indexOf(q) : -1;
+            const matchInfo = findMatchInfo(text, q);
             const idx = columnsOrder.indexOf(column);
             const canMoveLeft = idx > 0;
             const canMoveRight = idx < columnsOrder.length - 1;
@@ -196,14 +250,33 @@ export const TodoList = ({
                         }}
                         autoFocus
                       />
-                    ) : matchIndex !== -1 ? (
-                      <>
-                        {text.substring(0, matchIndex)}
-                        <span className="highlight">
-                          {text.substring(matchIndex, matchIndex + q.length)}
-                        </span>
-                        {text.substring(matchIndex + q.length)}
-                      </>
+                    ) : matchInfo ? (
+                      matchInfo.type === "substring" ? (
+                        <>
+                          {text.substring(0, matchInfo.index)}
+                          <span className="highlight">
+                            {text.substring(
+                              matchInfo.index,
+                              matchInfo.index + matchInfo.length
+                            )}
+                          </span>
+                          {text.substring(matchInfo.index + matchInfo.length)}
+                        </>
+                      ) : matchInfo.type === "chars" ? (
+                        <>
+                          {text.split("").map((ch, i) =>
+                            matchInfo.indices.includes(i) ? (
+                              <span className="highlight" key={i}>
+                                {ch}
+                              </span>
+                            ) : (
+                              <React.Fragment key={i}>{ch}</React.Fragment>
+                            )
+                          )}
+                        </>
+                      ) : (
+                        item.text
+                      )
                     ) : (
                       item.text
                     )}
