@@ -71,6 +71,14 @@ ul span {
   top: 0;
 }
 
+/* Substring match highlight inside task text (background-only) */
+.todoListMain .theList .itemText .highlight {
+  background-color: rgba(255, 235, 59, 0.6);
+  padding: 0 4px;
+  border-radius: 3px;
+  position: static;
+}
+
 .columns {
   display: flex;
   gap: 20px;

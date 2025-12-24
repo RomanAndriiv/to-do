@@ -117,6 +117,10 @@ export const TodoList = ({
             </label>
           </li>
           {items.map((item, index) => {
+            const q = (search || "").trim().toLowerCase();
+            const text = item.text || "";
+            const lower = text.toLowerCase();
+            const matchIndex = q ? lower.indexOf(q) : -1;
             const idx = columnsOrder.indexOf(column);
             const canMoveLeft = idx > 0;
             const canMoveRight = idx < columnsOrder.length - 1;
@@ -192,6 +196,14 @@ export const TodoList = ({
                         }}
                         autoFocus
                       />
+                    ) : matchIndex !== -1 ? (
+                      <>
+                        {text.substring(0, matchIndex)}
+                        <span className="highlight">
+                          {text.substring(matchIndex, matchIndex + q.length)}
+                        </span>
+                        {text.substring(matchIndex + q.length)}
+                      </>
                     ) : (
                       item.text
                     )}
