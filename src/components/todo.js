@@ -62,70 +62,73 @@ const Todo = () => {
         >
           Add Column
         </button>
-        {anySelected && (
-          <div className="selectionControls">
-            <button
-              onClick={() => {
-                if (!window.confirm(`Delete ${selectedIds.length} selected?`))
-                  return;
-                todosContext.todosDispatch(deleteTasks(selectedIds));
-                setSelectedIds([]);
-              }}
-            >
-              Delete Selected
-            </button>
-            <button
-              onClick={() => {
-                todosContext.todosDispatch(setTasksComplete(selectedIds, true));
-                setSelectedIds([]);
-              }}
-            >
-              Mark Complete
-            </button>
-            <button
-              onClick={() => {
-                todosContext.todosDispatch(
-                  setTasksComplete(selectedIds, false)
-                );
-                setSelectedIds([]);
-              }}
-            >
-              Mark Incomplete
-            </button>
-            <select
-              value={moveTarget}
-              onChange={(e) => setMoveTarget(e.target.value)}
-            >
-              {columns.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={() => {
-                todosContext.todosDispatch(
-                  moveTasksTo(selectedIds, moveTarget)
-                );
-                setSelectedIds([]);
-              }}
-            >
-              Move Selected
-            </button>
-            <button
-              onClick={() => {
-                // toggle select all: if all selected, clear; else select all ids
-                const allIds = todosContext.todosState.todos.map((t) => t.id);
-                const allSelected = allIds.every((id) =>
-                  selectedIds.includes(id)
-                );
-                setSelectedIds(allSelected ? [] : allIds);
-              }}
-            >
-              Toggle Select All
-            </button>
-          </div>
-        )}
+      </div>
+
+      {/* Manipulation bar placed above columns - controls disabled when nothing selected */}
+      <div className="manipulationBar">
+        <div className="selectionControls">
+          <button
+            disabled={!anySelected}
+            onClick={() => {
+              if (!window.confirm(`Delete ${selectedIds.length} selected?`))
+                return;
+              todosContext.todosDispatch(deleteTasks(selectedIds));
+              setSelectedIds([]);
+            }}
+          >
+            Delete Selected
+          </button>
+          <button
+            disabled={!anySelected}
+            onClick={() => {
+              todosContext.todosDispatch(setTasksComplete(selectedIds, true));
+              setSelectedIds([]);
+            }}
+          >
+            Mark Complete
+          </button>
+          <button
+            disabled={!anySelected}
+            onClick={() => {
+              todosContext.todosDispatch(setTasksComplete(selectedIds, false));
+              setSelectedIds([]);
+            }}
+          >
+            Mark Incomplete
+          </button>
+          <select
+            className="primarySelect"
+            disabled={!anySelected}
+            value={moveTarget}
+            onChange={(e) => setMoveTarget(e.target.value)}
+          >
+            {columns.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+          <button
+            disabled={!anySelected}
+            onClick={() => {
+              todosContext.todosDispatch(moveTasksTo(selectedIds, moveTarget));
+              setSelectedIds([]);
+            }}
+          >
+            Move Selected
+          </button>
+          <button
+            onClick={() => {
+              const allIds = todosContext.todosState.todos.map((t) => t.id);
+              const allSelected = allIds.every((id) =>
+                selectedIds.includes(id)
+              );
+              setSelectedIds(allSelected ? [] : allIds);
+            }}
+          >
+            Toggle Select All
+          </button>
+        </div>
       </div>
       <div className="columns" onDragOver={(e) => e.preventDefault()}>
         {columns.map((col, idx) => (
