@@ -6,10 +6,22 @@ export const MOVE_TASK_TO = "MOVE_TASK_TO";
 export const MOVE_COLUMN = "MOVE_COLUMN";
 
 let nextId = 0;
+if (typeof window !== "undefined" && window.localStorage) {
+  try {
+    const stored = parseInt(localStorage.getItem("nextId"), 10);
+    if (!Number.isNaN(stored)) nextId = stored;
+  } catch (err) {}
+}
 export const addTask = (text, column = "To Do") => {
+  const id = nextId++;
+  if (typeof window !== "undefined" && window.localStorage) {
+    try {
+      localStorage.setItem("nextId", String(nextId));
+    } catch (err) {}
+  }
   return {
     lineThrough: false,
-    id: nextId++,
+    id,
     text,
     column,
     type: ADD_TASK,
