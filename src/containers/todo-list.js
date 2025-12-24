@@ -1,14 +1,26 @@
 import React, { useContext, useState } from "react";
-import { deleteTask, toggleTask, moveTask, moveTaskTo } from "../actions";
+import {
+  deleteTask,
+  toggleTask,
+  moveTask,
+  moveTaskTo,
+  updateTask,
+} from "../actions";
 import { TodosContext } from "../index";
 import NoTasks from "../components/NoTasks";
 
-export const TodoList = ({ column = "To Do", search = "" }) => {
+export const TodoList = ({
+  column = "To Do",
+  search = "",
+  statusFilter = "all",
+}) => {
   const todosContext = useContext(TodosContext);
   const columnsOrder = (todosContext &&
     todosContext.todosState &&
     todosContext.todosState.columnsOrder) || ["To Do", "In Progress", "Done"];
   const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editText, setEditText] = useState("");
 
   const allTodos = todosContext.todosState.todos || [];
   const items = allTodos
@@ -16,6 +28,13 @@ export const TodoList = ({ column = "To Do", search = "" }) => {
     .filter((t) => {
       if (!search || !search.trim()) return true;
       return (t.text || "").toLowerCase().includes(search.toLowerCase());
+    })
+    .filter((t) => {
+      if (!statusFilter || statusFilter === "all") return true;
+      const completed = !!t.lineThrough;
+      if (statusFilter === "complete") return completed;
+      if (statusFilter === "incomplete") return !completed;
+      return true;
     });
   const { selectedIds = [], setSelectedIds } = todosContext || {};
   const allSelectedInColumn =
@@ -101,9 +120,10 @@ export const TodoList = ({ column = "To Do", search = "" }) => {
             const idx = columnsOrder.indexOf(column);
             const canMoveLeft = idx > 0;
             const canMoveRight = idx < columnsOrder.length - 1;
+            const isEditing = editingId === item.id;
             return (
               <li
-                draggable
+                draggable={!isEditing}
                 onDragStart={(e) => {
                   e.dataTransfer.setData(
                     "text/task",
@@ -148,40 +168,82 @@ export const TodoList = ({ column = "To Do", search = "" }) => {
                       }}
                     />
                   </div>
-                  <div className="itemText">{item.text}</div>
+                  <div className="itemText">
+                    {isEditing ? (
+                      <input
+                        className="itemEditInput"
+                        value={editText}
+                        title="Press Enter to save, Esc to cancel"
+                        aria-label="Edit task text; press Enter to save, Esc to cancel"
+                        onChange={(e) => setEditText(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.stopPropagation();
+                            todosContext.todosDispatch(
+                              updateTask(item.id, editText)
+                            );
+                            setEditingId(null);
+                            setEditText("");
+                          } else if (e.key === "Escape") {
+                            e.stopPropagation();
+                            setEditingId(null);
+                            setEditText("");
+                          }
+                        }}
+                        autoFocus
+                      />
+                    ) : (
+                      item.text
+                    )}
+                  </div>
                   <div className="itemControls">
-                    {canMoveLeft && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          todosContext.todosDispatch(
-                            moveTask(item.id, columnsOrder[idx - 1])
-                          );
-                        }}
-                      >
-                        ◀
-                      </button>
+                    {!isEditing && (
+                      <>
+                        {canMoveLeft && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              todosContext.todosDispatch(
+                                moveTask(item.id, columnsOrder[idx - 1])
+                              );
+                            }}
+                          >
+                            ◀
+                          </button>
+                        )}
+                        {canMoveRight && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              todosContext.todosDispatch(
+                                moveTask(item.id, columnsOrder[idx + 1])
+                              );
+                            }}
+                          >
+                            ▶
+                          </button>
+                        )}
+                        <button
+                          title="Edit task (Enter=save, Esc=cancel)"
+                          aria-label={`Edit task ${item.text}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingId(item.id);
+                            setEditText(item.text || "");
+                          }}
+                        >
+                          ✎
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            todosContext.todosDispatch(deleteTask(item.id));
+                          }}
+                        >
+                          X
+                        </button>
+                      </>
                     )}
-                    {canMoveRight && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          todosContext.todosDispatch(
-                            moveTask(item.id, columnsOrder[idx + 1])
-                          );
-                        }}
-                      >
-                        ▶
-                      </button>
-                    )}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        todosContext.todosDispatch(deleteTask(item.id));
-                      }}
-                    >
-                      X
-                    </button>
                   </div>
                 </div>
               </li>

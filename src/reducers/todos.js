@@ -5,6 +5,7 @@ import { MOVE_TASK } from "../actions";
 import { MOVE_TASK_TO } from "../actions";
 import { MOVE_COLUMN } from "../actions";
 import { ADD_COLUMN, DELETE_COLUMN } from "../actions";
+import { UPDATE_TASK } from "../actions";
 import { DELETE_TASKS, SET_TASKS_COMPLETE, MOVE_TASKS_TO } from "../actions";
 
 export const initialState = {
@@ -91,6 +92,14 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         todos: newTodos,
+      };
+    }
+    case UPDATE_TASK: {
+      const { id, text } = action;
+      if (id == null) return state;
+      return {
+        ...state,
+        todos: state.todos.map((t) => (t.id === id ? { ...t, text } : t)),
       };
     }
     case MOVE_COLUMN: {

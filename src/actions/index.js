@@ -4,6 +4,7 @@ export const TOGGLE_TASK = "TOGGLE_TASK";
 export const MOVE_TASK = "MOVE_TASK";
 export const MOVE_TASK_TO = "MOVE_TASK_TO";
 export const MOVE_COLUMN = "MOVE_COLUMN";
+export const UPDATE_TASK = "UPDATE_TASK";
 export const DELETE_TASKS = "DELETE_TASKS";
 export const SET_TASKS_COMPLETE = "SET_TASKS_COMPLETE";
 export const MOVE_TASKS_TO = "MOVE_TASKS_TO";
@@ -94,6 +95,14 @@ export function moveTasksTo(ids, column) {
     ids,
     column,
     type: MOVE_TASKS_TO,
+  };
+}
+
+export function updateTask(id, text) {
+  return {
+    id,
+    text,
+    type: UPDATE_TASK,
   };
 }
 export function toggleTask(id) {

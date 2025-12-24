@@ -20,6 +20,7 @@ const Todo = () => {
   const [dragOverIdx, setDragOverIdx] = useState(null);
   const [newColName, setNewColName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const { selectedIds = [], setSelectedIds } = todosContext || {};
   const anySelected = selectedIds && selectedIds.length > 0;
   const [moveTarget, setMoveTarget] = useState(
@@ -35,6 +36,15 @@ const Todo = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <select
+          className="statusFilter"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">All</option>
+          <option value="complete">Completed</option>
+          <option value="incomplete">Incomplete</option>
+        </select>
       </div>
       <div className="columnsControls">
         <input
@@ -169,7 +179,11 @@ const Todo = () => {
                 ×
               </button>
             </h2>
-            <TodoList column={col} search={searchTerm} />
+            <TodoList
+              column={col}
+              search={searchTerm}
+              statusFilter={statusFilter}
+            />
           </div>
         ))}
       </div>

@@ -118,6 +118,10 @@ ul span {
   padding: 6px;
   width: 240px;
 }
+.statusFilter {
+  margin-left: 8px;
+  padding: 6px;
+}
 .deleteColumn {
   margin-left: 8px;
   background: transparent;
@@ -161,6 +165,13 @@ ul span {
   align-items: center;
   margin-left: 12px;
 }
+.itemEditInput {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  font-size: 14px;
+  line-height: 1.4;
+}
 .itemToggle input[type="checkbox"] {
   /* completion checkbox: green accent, slightly smaller */
   width: 16px;
@@ -185,6 +196,7 @@ ul span {
 }
 .itemText {
   flex: 1;
+  min-width: 0;
 }
 .itemControls button {
   margin-left: 6px;
